@@ -3,7 +3,7 @@ import datetime
 # 現在の日時を取得
 now = datetime.datetime.now()
 
-# 挨拶を表示
-print("こんにちは！Gemini 3.0です。")
-print(f"現在の時刻は {now.strftime('%Y年%m月%d日 %H時%M分')} です。")
-print("GitHubへの最初のコード保存、成功おめでとうございます！")
+# 挨拶を表示（修正版）
+print("やあ！Gemini 3.0だよ！")
+print(f"今は {now.strftime('%H時%M分')} だね。調子はどう？")
+print("GitHubの「変更履歴」を作る実験中だよ！")
