@@ -3,64 +3,85 @@ import random
 import datetime
 import time
 
-# --- 1. 設定とデザイン（サイバーパンク風） ---
+# --- 1. 設定とデザイン ---
 st.set_page_config(page_title="AI Fortune System", page_icon="🤖")
 
-# CSSで強制的に「黒×ネオン」の世界観を作る
+# CSS（黒背景・ネオン推奨）
 st.markdown("""
     <style>
-    /* 全体のフォントをデジタルっぽく */
+    /* フォントを等幅にしてシステムっぽさを出す */
     .stApp {
-        font-family: 'Courier New', monospace;
+        font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
     }
-    /* タイトル（ネオン発光） */
     .main-title {
         font-size: 2.5em;
-        color: #00FFFF; /* サイアンブルー */
+        color: #00FFFF;
         text-align: center;
-        text-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF;
+        text-shadow: 0 0 10px #00FFFF;
         font-weight: bold;
         letter-spacing: 2px;
         margin-bottom: 0;
     }
-    /* サブタイトル */
     .sub-text {
         text-align: center;
-        color: #00FF00; /* ネオングリーン */
-        font-size: 1.0em;
-        margin-top: 0;
+        color: #00FF00;
+        font-size: 0.9em;
+        margin-top: 5px;
     }
-    /* 結果表示ボックス（枠線付き） */
+    /* 結果表示ボックス（読みやすく調整） */
     .result-box {
-        border: 2px solid #00FFFF;
+        border: 1px solid #00FFFF;
         padding: 20px;
-        border-radius: 5px;
-        background-color: rgba(0, 255, 255, 0.05); /* 薄い青背景 */
+        border-radius: 8px;
+        background-color: rgba(0, 30, 30, 0.8); /* 少し濃い背景 */
         text-align: center;
         margin-top: 20px;
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
     }
-    /* 大凶用の赤いボックス */
     .danger-box {
-        border: 2px solid #FF0000;
+        border: 1px solid #FF4444;
         padding: 20px;
-        border-radius: 5px;
-        background-color: rgba(255, 0, 0, 0.1);
+        border-radius: 8px;
+        background-color: rgba(40, 0, 0, 0.8);
         text-align: center;
         margin-top: 20px;
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
+    }
+    /* 文字を見やすく */
+    .event-text {
+        color: #fff;
+        font-size: 1.3em;
+        font-weight: bold;
+        margin: 15px 0;
+        line-height: 1.5;
+    }
+    .ai-comment {
+        color: #aaa;
+        font-size: 1.0em;
+        margin-top: 15px;
+        text-align: left; /* ログっぽく左寄せ */
+        padding-left: 20px;
+        border-left: 3px solid #00FFFF; /* 左にアクセント線 */
+    }
+    .ai-comment-danger {
+        color: #ffaaaa;
+        font-size: 1.0em;
+        margin-top: 15px;
+        text-align: left;
+        padding-left: 20px;
+        border-left: 3px solid #FF4444;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# 画面表示
+# ヘッダー表示
 st.markdown('<h1 class="main-title">SYSTEM: FORTUNE</h1>', unsafe_allow_html=True)
-st.markdown('<p class="sub-text">>>> AI運勢解析モジュール 起動中...<br>>>> 生体データと日付から未来事象を演算します。</p>', unsafe_allow_html=True)
+st.markdown('<p class="sub-text">AI運勢解析モジュール v3.0 // 起動準備完了</p>', unsafe_allow_html=True)
 
 st.divider()
 
-# --- 2. 入力エリア（日本語化） ---
+# --- 2. 入力エリア ---
 today = datetime.date.today()
-
-# 日本語リストに戻す
 constellations = [
     "おひつじ座", "おうし座", "ふたご座", "かに座", "しし座", "おとめ座",
     "てんびん座", "さそり座", "いて座", "やぎ座", "みずがめ座", "うお座"
@@ -70,38 +91,34 @@ blood_types = ["A型", "B型", "O型", "AB型", "不明"]
 col1, col2, col3 = st.columns([1, 2, 1])
 
 with col2:
-    # 日付をデジタル時計っぽく表示
     st.markdown(f"<div style='text-align: center; color: #aaa; font-family: monospace;'>TARGET DATE: {today.strftime('%Y-%m-%d')}</div>", unsafe_allow_html=True)
     
-    # 入力フォーム
-    user_constellation = st.selectbox("対象星座データ (Target Sign)", constellations)
-    user_blood = st.selectbox("血液型データ (Blood Type)", blood_types)
+    user_constellation = st.selectbox("対象星座データ", constellations)
+    user_blood = st.selectbox("血液型データ", blood_types)
     
-    st.write("") # 余白
+    st.write("")
     
-    # ボタン
     if st.button("解析開始 (INITIALIZE)", use_container_width=True):
         
-        # --- 3. 演出（データ解析風） ---
-        # プログレスバーを表示
-        progress_text = "Connecting to Database..."
+        # --- 3. 演出 ---
+        progress_text = "データベース接続中..."
         my_bar = st.progress(0, text=progress_text)
 
         for percent_complete in range(100):
-            time.sleep(0.015) # スピード調整
+            time.sleep(0.01) # 少し速くしました
             if percent_complete == 30:
-                 my_bar.progress(percent_complete + 1, text="Analyzing Neural Network...")
+                 my_bar.progress(percent_complete + 1, text="ニューラルネットワーク解析中...")
             elif percent_complete == 60:
-                 my_bar.progress(percent_complete + 1, text="Calculating Probabilities...")
+                 my_bar.progress(percent_complete + 1, text="未来事象の確率変動を計算中...")
             elif percent_complete == 90:
-                 my_bar.progress(percent_complete + 1, text="Rendering Future Events...")
+                 my_bar.progress(percent_complete + 1, text="最終結果を出力します...")
             else:
                  my_bar.progress(percent_complete + 1)
         
-        time.sleep(0.3)
-        my_bar.empty() # バーを消す
+        time.sleep(0.2)
+        my_bar.empty()
 
-        # --- 4. ロジック（オチの生成） ---
+        # --- 4. ロジック ---
         bad_events = [
             "買ったばかりの白い服にカレーうどんが跳ねる", "上司を「お母さん」と呼んでしまう",
             "改札でSuicaの残高不足で止められる", "楽しみにしていたプリンを家族に食べられる",
@@ -131,37 +148,38 @@ with col2:
 
         st.divider()
         
-        # 結果表示（HTMLでかっこよく組む）
+        # 結果表示（日本語ログ風）
         if draw <= 38:
             event = random.choice(bad_events)
             
-            # AIシステムログ風の出力
             result_html = f"""
             <div class="result-box">
-                <h2 style="color: #00FF00; margin:0; font-family: 'Courier New';">RESULT: POSITIVE (大吉)</h2>
+                <h2 style="color: #00FF00; margin:0;">RESULT: POSITIVE (大吉)</h2>
                 <hr style="border-color: #00FFFF; opacity: 0.3;">
-                <p style="color: #fff; font-size: 1.2em;">予測事象: 「{event}」</p>
-                <p style="color: #aaa; font-size: 0.9em; margin-top: 15px;">
-                >> 許容範囲内ト判断シマス。<br>
-                >> 総合評価: 大吉<br>
-                >> "デモ エエヤン"
-                </p>
+                <div style="color: #ccc; font-size: 0.8em; text-align: left;">[INFO] 予測された事象:</div>
+                <p class="event-text">「{event}」</p>
+                <div class="ai-comment">
+                    [ANALYSIS] 精神的ダメージ: 軽微<br>
+                    [CONCLUSION] 許容範囲内です。<br>
+                    [MESSAGE] <b>「でも、ええやん。大吉やん。」</b>
+                </div>
             </div>
             """
             st.markdown(result_html, unsafe_allow_html=True)
             st.balloons()
             
         else:
-            # 大凶（警告モード）
             result_html = f"""
             <div class="danger-box">
-                <h2 style="color: #FF0000; margin:0; font-family: 'Courier New';">WARNING: CRITICAL (大凶)</h2>
-                <hr style="border-color: #FF0000; opacity: 0.3;">
-                <p style="color: #fff; font-size: 1.2em;">システムエラー発生。<br>回避不能ナ不運ガ予測サレマス。</p>
-                <p style="color: #aaa; font-size: 0.9em; margin-top: 15px;">
-                >> 推奨アクション: ドンマイ。<br>
-                >> REBOOT REQUIRED.
-                </p>
+                <h2 style="color: #FF4444; margin:0;">WARNING: CRITICAL (大凶)</h2>
+                <hr style="border-color: #FF4444; opacity: 0.3;">
+                <div style="color: #ccc; font-size: 0.8em; text-align: left;">[ALERT] システム警告:</div>
+                <p class="event-text">回避不能な不運が予測されます。</p>
+                <div class="ai-comment-danger">
+                    [ANALYSIS] 精神的ダメージ: 甚大<br>
+                    [Recomendation] 直ちに帰宅してください。<br>
+                    [MESSAGE] <b>「ドンマイ。」</b>
+                </div>
             </div>
             """
             st.markdown(result_html, unsafe_allow_html=True)
