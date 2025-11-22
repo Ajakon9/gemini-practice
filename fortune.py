@@ -3,52 +3,105 @@ import random
 import datetime
 import time
 
-# --- 1. 見た目の偽装（高級感を出す） ---
-st.set_page_config(page_title="Celestial Guidance", page_icon="✨")
+# --- 1. 設定とデザイン（サイバーパンク風） ---
+st.set_page_config(page_title="AI Fortune System", page_icon="🤖")
 
+# CSSで強制的に「黒×ネオン」の世界観を作る
 st.markdown("""
     <style>
-    .main-title {
-        font-size: 3em;
-        color: #4B0082;
-        text-align: center;
-        font-family: 'Hiragino Mincho ProN', serif;
+    /* 全体のフォントをデジタルっぽく */
+    .stApp {
+        font-family: 'Courier New', monospace;
     }
+    /* タイトル（ネオン発光） */
+    .main-title {
+        font-size: 2.5em;
+        color: #00FFFF; /* サイアンブルー */
+        text-align: center;
+        text-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF;
+        font-weight: bold;
+        letter-spacing: 2px;
+        margin-bottom: 0;
+    }
+    /* サブタイトル */
     .sub-text {
         text-align: center;
-        color: #555;
-        font-size: 1.1em;
+        color: #00FF00; /* ネオングリーン */
+        font-size: 1.0em;
+        margin-top: 0;
+    }
+    /* 結果表示ボックス（枠線付き） */
+    .result-box {
+        border: 2px solid #00FFFF;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: rgba(0, 255, 255, 0.05); /* 薄い青背景 */
+        text-align: center;
+        margin-top: 20px;
+    }
+    /* 大凶用の赤いボックス */
+    .danger-box {
+        border: 2px solid #FF0000;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: rgba(255, 0, 0, 0.1);
+        text-align: center;
+        margin-top: 20px;
     }
     </style>
     """, unsafe_allow_html=True)
 
-st.markdown('<h1 class="main-title">✨ 星読みの神託 ✨</h1>', unsafe_allow_html=True)
-st.markdown('<p class="sub-text">古の星々の配置と、あなたの血脈から<br>今日の運命を正確に導き出します。</p>', unsafe_allow_html=True)
+# 画面表示
+st.markdown('<h1 class="main-title">SYSTEM: FORTUNE</h1>', unsafe_allow_html=True)
+st.markdown('<p class="sub-text">>>> AI運勢解析モジュール 起動中...<br>>>> 生体データと日付から未来事象を演算します。</p>', unsafe_allow_html=True)
 
 st.divider()
 
-# --- 2. 入力エリア ---
+# --- 2. 入力エリア（日本語化） ---
 today = datetime.date.today()
+
+# 日本語リストに戻す
 constellations = [
-    "牡羊座 (Aries)", "牡牛座 (Taurus)", "双子座 (Gemini)", "蟹座 (Cancer)", 
-    "獅子座 (Leo)", "乙女座 (Virgo)", "天秤座 (Libra)", "蠍座 (Scorpio)", 
-    "射手座 (Sagittarius)", "山羊座 (Capricorn)", "水瓶座 (Aquarius)", "魚座 (Pisces)"
+    "おひつじ座", "おうし座", "ふたご座", "かに座", "しし座", "おとめ座",
+    "てんびん座", "さそり座", "いて座", "やぎ座", "みずがめ座", "うお座"
 ]
-blood_types = ["Type A", "Type B", "Type O", "Type AB", "Unknown"]
+blood_types = ["A型", "B型", "O型", "AB型", "不明"]
 
 col1, col2, col3 = st.columns([1, 2, 1])
 
 with col2:
-    st.caption(f"Date: {today.strftime('%Y.%m.%d')}")
-    user_constellation = st.selectbox("Select Your Sign", constellations)
-    user_blood = st.selectbox("Select Blood Type", blood_types)
+    # 日付をデジタル時計っぽく表示
+    st.markdown(f"<div style='text-align: center; color: #aaa; font-family: monospace;'>TARGET DATE: {today.strftime('%Y-%m-%d')}</div>", unsafe_allow_html=True)
     
-    st.write("")
+    # 入力フォーム
+    user_constellation = st.selectbox("対象星座データ (Target Sign)", constellations)
+    user_blood = st.selectbox("血液型データ (Blood Type)", blood_types)
     
-    if st.button("運命を紐解く (Reveal Destiny)", use_container_width=True):
-        with st.spinner('星々と交信中... 宇宙のエネルギーを受信しています...'):
-            time.sleep(2)
+    st.write("") # 余白
+    
+    # ボタン
+    if st.button("解析開始 (INITIALIZE)", use_container_width=True):
+        
+        # --- 3. 演出（データ解析風） ---
+        # プログレスバーを表示
+        progress_text = "Connecting to Database..."
+        my_bar = st.progress(0, text=progress_text)
 
+        for percent_complete in range(100):
+            time.sleep(0.015) # スピード調整
+            if percent_complete == 30:
+                 my_bar.progress(percent_complete + 1, text="Analyzing Neural Network...")
+            elif percent_complete == 60:
+                 my_bar.progress(percent_complete + 1, text="Calculating Probabilities...")
+            elif percent_complete == 90:
+                 my_bar.progress(percent_complete + 1, text="Rendering Future Events...")
+            else:
+                 my_bar.progress(percent_complete + 1)
+        
+        time.sleep(0.3)
+        my_bar.empty() # バーを消す
+
+        # --- 4. ロジック（オチの生成） ---
         bad_events = [
             "買ったばかりの白い服にカレーうどんが跳ねる", "上司を「お母さん」と呼んでしまう",
             "改札でSuicaの残高不足で止められる", "楽しみにしていたプリンを家族に食べられる",
@@ -78,11 +131,38 @@ with col2:
 
         st.divider()
         
+        # 結果表示（HTMLでかっこよく組む）
         if draw <= 38:
             event = random.choice(bad_events)
-            result_text = f"大吉！<br>{event}、<br>でもええやん。<br>大吉やん。"
-            st.markdown(f"<h2 style='text-align: center; color: #FF4B4B;'>🎉 {result_text}</h2>", unsafe_allow_html=True)
+            
+            # AIシステムログ風の出力
+            result_html = f"""
+            <div class="result-box">
+                <h2 style="color: #00FF00; margin:0; font-family: 'Courier New';">RESULT: POSITIVE (大吉)</h2>
+                <hr style="border-color: #00FFFF; opacity: 0.3;">
+                <p style="color: #fff; font-size: 1.2em;">予測事象: 「{event}」</p>
+                <p style="color: #aaa; font-size: 0.9em; margin-top: 15px;">
+                >> 許容範囲内ト判断シマス。<br>
+                >> 総合評価: 大吉<br>
+                >> "デモ エエヤン"
+                </p>
+            </div>
+            """
+            st.markdown(result_html, unsafe_allow_html=True)
             st.balloons()
+            
         else:
-            st.markdown("<h2 style='text-align: center; color: #333;'>💀 大凶！...ドンマイ。</h2>", unsafe_allow_html=True)
+            # 大凶（警告モード）
+            result_html = f"""
+            <div class="danger-box">
+                <h2 style="color: #FF0000; margin:0; font-family: 'Courier New';">WARNING: CRITICAL (大凶)</h2>
+                <hr style="border-color: #FF0000; opacity: 0.3;">
+                <p style="color: #fff; font-size: 1.2em;">システムエラー発生。<br>回避不能ナ不運ガ予測サレマス。</p>
+                <p style="color: #aaa; font-size: 0.9em; margin-top: 15px;">
+                >> 推奨アクション: ドンマイ。<br>
+                >> REBOOT REQUIRED.
+                </p>
+            </div>
+            """
+            st.markdown(result_html, unsafe_allow_html=True)
             st.snow()
