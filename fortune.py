@@ -105,7 +105,7 @@ with col2:
         my_bar = st.progress(0, text=progress_text)
 
         for percent_complete in range(100):
-            time.sleep(0.01) # 少し速くしました
+            time.sleep(0.05) # 少し速くしました
             if percent_complete == 30:
                  my_bar.progress(percent_complete + 1, text="ニューラルネットワーク解析中...")
             elif percent_complete == 60:
@@ -149,7 +149,7 @@ with col2:
         st.divider()
         
         # 結果表示（日本語ログ風）
-        if draw <= 38:
+        if draw <= 20:
             event = random.choice(bad_events)
             
             result_html = f"""
